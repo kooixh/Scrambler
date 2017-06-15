@@ -1,20 +1,29 @@
 package Scrambler;
 
 /**
- * Created by Kooi on 14/05/2017.
+ * Created by Kooi on 15/05/2017.
  */
-public class Scrambler3x3 extends CubeScrambler{
+public class Scrambler4x4 extends CubeScrambler{
 
-    public Scrambler3x3(){
-        puzzleName = "3x3";
-        scrambleLength = 21;
+    private final static String[] DOUBLE_ROTATION = {"","w"};
+
+
+    protected Scrambler4x4(){
+        super.scrambleLength = 40;
+        super.puzzleName = "4x4";
         generateScramble();
     }
 
+
     @Override
     public String generateScramble() {
+        lastScramble = scramble;
+
         //last face returned
         int last=0;
+        int doubleRotate =0;
+
+
         //the first roation in the scramble
         boolean first = true;
 
@@ -26,30 +35,35 @@ public class Scrambler3x3 extends CubeScrambler{
             if (first) {
 
                 int randomFace = (int) (Math.random() * (FACES.length));
+                int randomDouble = (int) (Math.random()*(DOUBLE_ROTATION.length));
                 int randomRotation = (int) (Math.random() * (ROTATION.length));
 
-                turn = FACES[randomFace] + ROTATION[randomRotation];
+                turn = FACES[randomFace] +DOUBLE_ROTATION[randomDouble]+ ROTATION[randomRotation];
                 scramble.append(turn+" ");
 
                 //store the last random number
                 last = randomFace;
+                doubleRotate = randomDouble;
 
                 first = false;
             } else {
                 int randomFace = (int) (Math.random() * (FACES.length));
-
-                //Don't allow same face twice
-                while (randomFace == last) {
-                    randomFace = (int) (Math.random() * (FACES.length));
-                }
-                last = randomFace;
-
-
+                int randomDouble = (int) (Math.random()*(DOUBLE_ROTATION.length));
                 int randomRotation = (int) (Math.random() * (ROTATION.length));
 
-                turn = FACES[randomFace] + ROTATION[randomRotation];
+                //Don't allow same face twice
+                while (randomFace == last && doubleRotate == randomDouble) {
+                    randomFace = (int) (Math.random() * (FACES.length));
+                    randomDouble = (int) (Math.random()*(DOUBLE_ROTATION.length));
+                }
 
-                //store last random number
+
+                last = randomFace;
+                doubleRotate = randomDouble;
+
+
+                turn = FACES[randomFace] + DOUBLE_ROTATION[randomDouble]+ ROTATION[randomRotation];
+
 
 
                 scramble.append(turn+" ");
@@ -58,5 +72,6 @@ public class Scrambler3x3 extends CubeScrambler{
         }
         super.scramble = scramble.toString();
         return super.scramble;
+
     }
 }
